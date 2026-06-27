@@ -1,18 +1,10 @@
 import pandas as pd
 import psycopg2
 import streamlit as st
-from urllib.parse import urlparse
 
 def get_conn():
-    url = urlparse(st.secrets["DATABASE_URL"])
-    return psycopg2.connect(
-        host=url.hostname,
-        port=url.port,
-        database=url.path[1:],
-        user=url.username,
-        password=url.password,
-        sslmode="require"
-    )
+    url = st.secrets["DATABASE_URL"]
+    return psycopg2.connect(url, sslmode="require")
 
 def setup_database():
     conn = get_conn()
