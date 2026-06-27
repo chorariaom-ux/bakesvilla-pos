@@ -38,13 +38,15 @@ def setup_database():
     cursor.close()
     conn.close()
 
-def fetch_menu_data() -> pd.DataFrame:
+@st.cache_data(ttl=60)
+def fetch_menu_data():
     conn = get_conn()
     df = pd.read_sql("SELECT * FROM Menu ORDER BY category, name", conn)
     conn.close()
     return df
 
-def fetch_sales_data() -> pd.DataFrame:
+@st.cache_data(ttl=30)
+def fetch_sales_data():
     conn = get_conn()
     df = pd.read_sql("SELECT * FROM Sales ORDER BY timestamp DESC", conn)
     conn.close()

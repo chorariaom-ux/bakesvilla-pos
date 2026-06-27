@@ -150,9 +150,13 @@ with st.sidebar:
 
             # Excel download
             st.markdown("---")
+           # Fix timezone issue before writing to Excel
+            excel_df = filtered_df.copy()
+            excel_df['timestamp'] = pd.to_datetime(excel_df['timestamp']).dt.tz_localize(None)
+            
             buffer = io.BytesIO()
             with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-                filtered_df.to_excel(writer, index=False, sheet_name='Sales')
+                excel_df.to_excel(writer, index=False, sheet_name='Sales')
                 if filter_mode in ["All Time", "Date Range"]:
                     daily.to_excel(writer, index=False, sheet_name='Daily Summary')
                 top_items.to_excel(writer, index=False, sheet_name='Top Items')
