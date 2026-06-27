@@ -2,7 +2,10 @@ import pandas as pd
 from sqlalchemy import create_engine, text
 import streamlit as st
 
-ENGINE = create_engine(st.secrets["DATABASE_URL"])
+DATABASE_URL = st.secrets["DATABASE_URL"].replace(
+    "postgresql://", "postgresql+psycopg2://"
+)
+ENGINE = create_engine(DATABASE_URL, connect_args={"sslmode": "require"})
 
 def setup_database():
     with ENGINE.connect() as conn:
